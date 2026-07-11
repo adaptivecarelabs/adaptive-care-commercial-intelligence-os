@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.cache.redis import redis_client
+from app.core.config import settings
+from app.storage.client import bucket_exists
 
 router = APIRouter()
 
@@ -18,15 +20,20 @@ def root():
 @router.get("/health", tags=["System"])
 def health():
     redis_status = "healthy"
+    storage_status = "healthy"
 
     try:
         redis_client.ping()
     except Exception:
         redis_status = "unhealthy"
 
+    if not bucket_exists(settings.S3_BUCKET):
+        storage_status = "unhealthy"
+
     return {
         "status": "healthy",
         "services": {
             "redis": redis_status,
+            "storage": storage_status,
         },
     }
