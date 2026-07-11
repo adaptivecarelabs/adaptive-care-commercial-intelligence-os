@@ -1,14 +1,11 @@
-"""
-CIOS API
-"""
-
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.api.routes import router
 
+app = FastAPI(
+    title="CIOS API",
+    version="1.0.0",
+    description="Commercial Intelligence Operating System API"
+)
 
-@app.get("/")
-def root():
-    return {
-        "message": "Welcome to CIOS API"
-    }
+app.include_router(router)
