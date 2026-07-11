@@ -71,14 +71,21 @@ def login(
         )
 
     return TokenResponse(
-        access_token=create_access_token(str(user.id)),
-        refresh_token=create_refresh_token(str(user.id)),
+        access_token=create_access_token(
+            str(user.id),
+            user.workspace_id,
+        ),
+        refresh_token=create_refresh_token(
+            str(user.id),
+            user.workspace_id,
+        ),
     )
 
 @router.post(
     "/refresh",
     response_model=TokenResponse,
 )
+
 def refresh_token(
     payload: RefreshTokenRequest,
 ):
@@ -92,18 +99,25 @@ def refresh_token(
             )
 
         subject = decoded["sub"]
+        workspace_id = decoded["workspace_id"]
 
         return TokenResponse(
-            access_token=create_access_token(subject),
-            refresh_token=create_refresh_token(subject),
+            access_token=create_access_token(
+                subject,
+                workspace_id,
+            ),
+            refresh_token=create_refresh_token(
+                subject,
+                workspace_id,
+            ),
         )
-
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired refresh token",
         )
-    
+
+
 @router.get("/me", response_model=UserResponse)
 def me(
     current_user = Depends(get_current_user),

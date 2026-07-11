@@ -16,13 +16,17 @@ def verify_password(password: str, hashed_password: str) -> bool:
     return password_hasher.verify(password, hashed_password)
 
 
-def create_access_token(subject: str) -> str:
+def create_access_token(
+    subject: str,
+    workspace_id: int,
+):
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
     payload = {
         "sub": subject,
+        "workspace_id": workspace_id,
         "type": "access",
         "exp": expire,
     }
@@ -34,13 +38,17 @@ def create_access_token(subject: str) -> str:
     )
 
 
-def create_refresh_token(subject: str) -> str:
+def create_refresh_token(
+    subject: str,
+    workspace_id: int,
+):
     expire = datetime.now(timezone.utc) + timedelta(
         days=settings.REFRESH_TOKEN_EXPIRE_DAYS
     )
 
     payload = {
         "sub": subject,
+        "workspace_id": workspace_id,
         "type": "refresh",
         "exp": expire,
     }

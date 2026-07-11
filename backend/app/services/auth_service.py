@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 
 from app.auth.security import hash_password, verify_password
 from app.models.user import User
+from app.services.workspace_service import WorkspaceService
+from app.utils.slug import generate_slug
 
 
 class AuthService:
@@ -21,17 +23,34 @@ class AuthService:
         full_name: str,
         password: str,
     ):
+        workspace_service = WorkspaceService(self.db)
+
+        slug = generate_slug(full_name)
+
+        workspace = workspace_service.create_workspace(
+            name=f"{full_name}'s Workspace",
+            slug=slug,
+        )
+
         user = User(
             email=email,
             full_name=full_name,
             password_hash=hash_password(password),
+            workspace_id=workspace.id,
         )
 
-        self.db.add(user)
-        self.db.commit()
-        self.db.refresh(user)
+        try:
+            self.db.add(user)
 
-        return user
+            self.db.commit()
+
+            self.db.refresh(user)
+
+            return user
+
+        except Exception:
+            self.db.rollback()
+            raise
 
     def authenticate(
         self,

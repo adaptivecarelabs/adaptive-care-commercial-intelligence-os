@@ -33,8 +33,21 @@ def get_current_user(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found",
             )
+        auth_service = AuthService(db)
+
+        user = auth_service.get_user_by_id(
+            int(payload["sub"])
+        )
+
+        if user is None:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found",
+        )
 
         return user
+    
+    
 
     except JWTError:
         raise HTTPException(

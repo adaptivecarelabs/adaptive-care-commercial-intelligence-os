@@ -27,13 +27,13 @@ def health():
     except Exception:
         redis_status = "unhealthy"
 
-    if not bucket_exists(settings.S3_BUCKET):
-        storage_status = "unhealthy"
+    try:
+        storage_ok = bucket_exists(settings.S3_BUCKET)
+    except Exception:
+        storage_ok = False
 
     return {
-        "status": "healthy",
-        "services": {
-            "redis": redis_status,
-            "storage": storage_status,
-        },
-    }
+        "status": "healthy" if storage_ok else "degraded",
+        "database": "ok",
+        "storage": storage_ok,
+    }   
