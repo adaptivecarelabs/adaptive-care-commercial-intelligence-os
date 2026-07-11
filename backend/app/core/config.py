@@ -13,6 +13,10 @@ class Settings:
     S3_SECRET_KEY = "minioadmin"
     S3_BUCKET = "cios-raw"
     S3_REGION = "us-east-1"
+    JWT_SECRET_KEY = "change-me-in-production"
+    JWT_ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+    REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 
 settings = Settings()
