@@ -2,7 +2,8 @@ from datetime import datetime
 
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
@@ -40,3 +41,16 @@ class User(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    workspace_id: Mapped[int] = mapped_column(
+        ForeignKey("workspaces.id"),
+        nullable=False,
+    )
+
+    workspace = relationship(
+        "Workspace",
+        back_populates="users",
+    )
+
+def __repr__(self):
+    return f"<User(id={self.id}, email='{self.email}')>"
