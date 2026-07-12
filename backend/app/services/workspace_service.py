@@ -30,3 +30,14 @@ class WorkspaceService:
             .filter(Workspace.id == workspace_id)
             .first()
         )
+    
+    def get_by_slug(
+        self,
+        slug: str,
+    ) -> Workspace | None:
+
+        return (
+            self.db.query(Workspace)
+            .filter(Workspace.slug == slug)
+            .first()
+        )
