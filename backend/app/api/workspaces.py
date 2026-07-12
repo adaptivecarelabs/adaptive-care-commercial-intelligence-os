@@ -16,7 +16,7 @@ router = APIRouter(
     response_model=WorkspaceResponse,
 )
 def get_my_workspace(
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     workspace_service = WorkspaceService(db)

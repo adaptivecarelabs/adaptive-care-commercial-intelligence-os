@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
-
 from app.models.workspace import Workspace
+from uuid import uuid4
+from slugify import slugify
 
 
 class WorkspaceService:
+
     def __init__(self, db: Session):
         self.db = db
 
@@ -14,8 +16,8 @@ class WorkspaceService:
     ) -> Workspace:
 
         workspace = Workspace(
-            name=name,
-            slug=slug,
+            name=f"{name}'s Workspace",
+            slug = f"{slugify(name)}-{uuid4().hex[:8]}"
         )
 
         self.db.add(workspace)

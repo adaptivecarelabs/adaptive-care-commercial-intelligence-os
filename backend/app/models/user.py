@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey
@@ -50,6 +49,12 @@ class User(Base):
     workspace = relationship(
         "Workspace",
         back_populates="users",
+    )
+
+    project_memberships = relationship(
+        "ProjectMember",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )
 
 def __repr__(self):

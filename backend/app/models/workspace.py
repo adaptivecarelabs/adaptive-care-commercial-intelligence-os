@@ -32,10 +32,17 @@ class Workspace(Base):
         default=lambda: datetime.now(timezone.utc),
     )
 
-    users: Mapped[list["User"]] = relationship(
+    users = relationship(
+        "User",
         back_populates="workspace",
         cascade="all, delete-orphan",
     )
 
-def __repr__(self):
-    return f"<Workspace(id={self.id}, name='{self.name}')>"
+    projects = relationship(
+        "Project",
+        back_populates="workspace",
+        cascade="all, delete-orphan",
+    )
+
+    def __repr__(self):
+        return f"<Workspace(id={self.id}, name='{self.name}')>"

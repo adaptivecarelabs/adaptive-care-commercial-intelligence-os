@@ -28,7 +28,7 @@ class AuthService:
         slug = generate_slug(full_name)
 
         workspace = workspace_service.create_workspace(
-            name=f"{full_name}'s Workspace",
+            name=full_name,
             slug=slug,
         )
 

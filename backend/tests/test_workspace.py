@@ -11,12 +11,13 @@ client = TestClient(app)
 def test_get_my_workspace():
     
     email = f"{uuid4()}@example.com"
+    name = f"Workspace Tester {uuid4().hex[:8]}"
     
     register = client.post(
         "/auth/register",
         json={
             "email": email,
-            "full_name": "Workspace Tester",
+            "full_name": name,
             "password": "password123",
         },
     )
@@ -44,8 +45,8 @@ def test_get_my_workspace():
     assert response.status_code == 200
     data = response.json()
 
-    assert data["name"] == "Workspace Tester's Workspace"
-    assert data["slug"] == "workspace-tester"
+    assert data["name"] == f"{name}'s Workspace"
+    assert data["slug"].startswith("workspace-tester")
 
     assert "id" in data
     assert "created_at" in data
